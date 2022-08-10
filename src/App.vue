@@ -2,7 +2,7 @@
 import { ref, computed } from "vue";
 import { useClipboard } from "@vueuse/core";
 
-const text = ref("T");
+const text = ref("");
 
 const convertSinglePreposition = (value) => {
   return value.replace(
@@ -34,7 +34,7 @@ const { copy, copied, isSupported } = useClipboard({ source: convertedText });
 
       <div class="mt-1">
         <textarea
-          placeholder="Inser text to be converted"
+          placeholder="Insert text to be converted..."
           v-model="text"
           rows="10"
           name="comment"
