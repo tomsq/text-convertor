@@ -2,7 +2,7 @@
 import { ref, computed } from "vue";
 import { useClipboard } from "@vueuse/core";
 
-const text = ref("Tadz bude a od atud dal taky ve skrini v kopci");
+const text = ref("");
 
 const convertSinglePrepositionForCopy = (value) => {
   return value.replace(
