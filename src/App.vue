@@ -43,16 +43,18 @@ const { copy, copied, isSupported } = useClipboard({ source: convertedText });
         ></textarea>
       </div>
 
-      <label
-        for="comment"
-        class="block mt-5 mb-1 text-sm font-medium text-gray-100"
-        >Converted text</label
-      >
-      <div class="bg-gray-200 p-3 rounded-md">
-        <pre class="break-words">{{ convertedText }}</pre>
+      <div v-if="convertedText">
+        <label
+          for="comment"
+          class="block mt-5 mb-1 text-sm font-medium text-gray-100"
+          >Converted text</label
+        >
+        <div class="bg-gray-200 p-3 rounded-md">
+          <pre class="break-words">{{ convertedText }}</pre>
+        </div>
       </div>
 
-      <div v-if="isSupported" class="flex justify-end">
+      <div v-if="isSupported && convertedText" class="flex justify-end">
         <button
           @click="copy()"
           type="button"
