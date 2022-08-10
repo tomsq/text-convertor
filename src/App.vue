@@ -2,16 +2,27 @@
 import { ref, computed } from "vue";
 import { useClipboard } from "@vueuse/core";
 
-const text = ref("");
+const text = ref("Tadz bude a od atud dal taky ve skrini v kopci");
 
-const convertSinglePreposition = (value) => {
+const convertSinglePrepositionForCopy = (value) => {
   return value.replace(
     /(\s|\&nbsp;)([aiueoksvzAIUEOKSVZ]|[0-9]\.?)\s/g,
     "$1$2&nbsp;"
   );
 };
 
+const convertSinglePreposition = (value) => {
+  return value.replace(
+    /(\s|\&nbsp;)([aiueoksvzAIUEOKSVZ]|[0-9]\.?)\s/g,
+    "$1$2<span>&amp;nbsp;</span>"
+  );
+};
+
 const convertToNonBreakingHyphensInPredefinedWords = (value) => {
+  return value.replace(/-/g, "<span>&amp;#8209;</span>");
+};
+
+const convertToNonBreakingHyphensInPredefinedWordsForCopy = (value) => {
   return value.replace(/-/g, "&#8209;");
 };
 
@@ -22,7 +33,16 @@ const convertedText = computed(() => {
   return returnVal;
 });
 
-const { copy, copied, isSupported } = useClipboard({ source: convertedText });
+const convertedTextForCopy = computed(() => {
+  let returnVal = convertSinglePrepositionForCopy(text.value);
+  returnVal = convertToNonBreakingHyphensInPredefinedWordsForCopy(returnVal);
+
+  return returnVal;
+});
+
+const { copy, copied, isSupported } = useClipboard({
+  source: convertedTextForCopy,
+});
 </script>
 
 <template>
@@ -50,7 +70,9 @@ const { copy, copied, isSupported } = useClipboard({ source: convertedText });
           >Converted text</label
         >
         <div class="bg-gray-200 p-3 rounded-md">
-          <pre class="break-words">{{ convertedText }}</pre>
+          <pre
+            class="break-words"
+          > <code class="bg-gray-200" v-html="convertedText"></code></pre>
         </div>
       </div>
 
@@ -63,8 +85,6 @@ const { copy, copied, isSupported } = useClipboard({ source: convertedText });
           {{ copied ? "Copied 🎉" : "Copy" }}
         </button>
       </div>
-
-      <div>{{}}</div>
     </section>
   </main>
 </template>
@@ -77,5 +97,9 @@ pre {
   white-space: -pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
+}
+
+code > span {
+  background: yellow;
 }
 </style>
